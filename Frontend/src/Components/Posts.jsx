@@ -14,7 +14,7 @@ const Post = () => {
 
   const fetchPosts = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/posts",{withCredentials: true});
+      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/posts`,{withCredentials: true});
       const sortedPosts = res.data.sort((a, b) => b.likes - a.likes);
       setPosts(sortedPosts);
     } catch (err) {
@@ -26,7 +26,7 @@ const Post = () => {
     if (votedPosts[postId]) return alert("You have already voted on this post!");
 
     try {
-      await axios.post(`http://localhost:5000/api/posts/${postId}/${type}`,{},{ withCredentials: true });
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/posts/${postId}/${type}`,{},{ withCredentials: true });
       setVotedPosts({ ...votedPosts, [postId]: type });
       fetchPosts();
     } catch (err) {

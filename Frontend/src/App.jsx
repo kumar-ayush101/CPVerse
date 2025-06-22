@@ -16,7 +16,7 @@ const ProtectedRoute = ({ element }) => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/auth/me", { withCredentials: true })
+      .get(`${import.meta.env.VITE_API_BASE_URL}/auth/me`, { withCredentials: true })
       .then(() => {
         setIsAuthenticated(true);
         setLoading(false);

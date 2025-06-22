@@ -15,7 +15,7 @@ const Login = ({ toggleForm }) => {
   const handleLogin = async () => {
     try {
       const res = await axios.post(
-      "http://localhost:5000/api/auth/login",
+      `${import.meta.env.VITE_API_BASE_URL}/auth/login`,
       form,
       { withCredentials: true } 
     );
@@ -30,7 +30,7 @@ const Login = ({ toggleForm }) => {
  const handleGoogleSuccess = async (credentialResponse) => {
   try {
     const decoded = jwtDecode(credentialResponse.credential);
-    await axios.post("http://localhost:5000/api/auth/google-login", {
+    await axios.post(`${import.meta.env.VITE_API_BASE_URL}/auth/google-login`, {
       email: decoded.email,
       name: decoded.name,
       googleId: decoded.sub,

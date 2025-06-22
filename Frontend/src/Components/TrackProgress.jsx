@@ -18,7 +18,7 @@ const TrackProgress = () => {
   useEffect(() => {
     const checkCFStatus = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/cfuser/status", { withCredentials: true });
+        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/cfuser/status`, { withCredentials: true });
         setIsVerified(true);
         setHandle(res.data.handle);
         setUserData(res.data.cfData);
@@ -31,7 +31,7 @@ const TrackProgress = () => {
 
     const fetchImportantQuestions = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/cfuser/important-questions", { withCredentials: true });
+        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/cfuser/important-questions`, { withCredentials: true });
         setImportantQuestions(res.data.importantQuestions);
       } catch (err) {
         console.error("Failed to fetch important questions", err);
@@ -44,7 +44,7 @@ const TrackProgress = () => {
   const initiateVerification = async () => {
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/cfuser/initiate",
+        `${import.meta.env.VITE_API_BASE_URL}/cfuser/initiate`,
         { cfHandle: handle },
         { withCredentials: true }
       );
@@ -57,7 +57,7 @@ const TrackProgress = () => {
 
   const verifyHandle = async () => {
     try {
-      const res = await axios.post("http://localhost:5000/api/cfuser/verify", {}, { withCredentials: true });
+      const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/cfuser/verify`, {}, { withCredentials: true });
       if (res.data.message) {
         setIsVerified(true);
         fetchUserData();
@@ -73,7 +73,7 @@ const TrackProgress = () => {
   };
 
   const fetchUserData = async () => {
-    const res = await axios.get(`https://codeforces.com/api/user.info?handles=${handle}`);
+    const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/user.info?handles=${handle}`);
     setUserData(res.data.result[0]);
   };
 
@@ -104,7 +104,7 @@ const TrackProgress = () => {
     if (questionInput.trim()) {
       try {
         await axios.post(
-          "http://localhost:5000/api/cfuser/important-questions",
+          `${import.meta.env.VITE_API_BASE_URL}/cfuser/important-questions`,
           { question: questionInput.trim() },
           { withCredentials: true }
         );

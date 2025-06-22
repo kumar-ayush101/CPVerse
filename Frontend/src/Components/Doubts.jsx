@@ -12,7 +12,7 @@ const Doubts = () => {
   useEffect(() => {
     const fetchDoubts = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/doubts", {withCredentials: true});
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/doubts`, {withCredentials: true});
         const formatted = response.data.map(d => ({ ...d, replies: [] }));
         setDoubts(formatted);
       } catch (error) {
@@ -33,7 +33,7 @@ const Doubts = () => {
 
     try {
       
-      await axios.post(`http://localhost:5000/api/doubts/${id}/reply`, {
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/doubts/${id}/reply`, {
         text: replyText,
       });
 

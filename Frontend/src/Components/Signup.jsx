@@ -12,7 +12,7 @@ const Signup = ({ toggleForm }) => {
     if (form.password !== form.confirm) return alert("❌ Passwords do not match");
 
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/signup", form);
+      const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/auth/signup`, form);
       alert(res.data.message); 
       if (res.data.message.includes("OTP")) setOtpSent(true);
     } catch (err) {
@@ -22,7 +22,7 @@ const Signup = ({ toggleForm }) => {
 
   const handleVerify = async () => {
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/verify-otp", {
+      const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/auth/verify-otp`, {
         email: form.email,
         otp: form.otp
       }, {
