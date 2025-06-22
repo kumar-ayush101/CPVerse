@@ -1,0 +1,17 @@
+# Frontend
+Frontend/node_modules
+Frontend/.env
+Frontend/dist
+
+# Backend
+Backend/node_modules
+Backend/.env
+
+# OS / Editor junk
+.DS_Store
+.env
+*.log
+
+# Optional: ignore build outputs
+build/
+dist/
