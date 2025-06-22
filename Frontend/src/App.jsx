@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-import LandingPage from "./components/LandingPage";
+import LandingPage from "./Components/LandingPage";
 import Home from "./Components/Home";
 import CreateContent from "./Components/CreateContent";
 import Post from "./components/Posts";
