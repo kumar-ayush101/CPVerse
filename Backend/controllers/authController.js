@@ -60,6 +60,15 @@ export const verifyOTP = async (req, res) => {
     user.otp = null;
     await user.save();
 
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1d" });
+
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'None',
+      maxAge: 24 * 60 * 60 * 1000
+    });
+
     return res.status(200).json({ message: "User successfully verified!" });
 
   } catch (error) {
@@ -84,13 +93,12 @@ export const login = async (req, res) => {
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1d" });
 
-    
     res.cookie('token', token, {
-  httpOnly: true,
-  secure: true, 
-  sameSite: 'none', 
-  maxAge: 24 * 60 * 60 * 1000
-});
+      httpOnly: true,
+      secure: true,
+      sameSite: 'None',
+      maxAge: 24 * 60 * 60 * 1000
+    });
 
     return res.status(200).json({ message: "Login successful" });
 
@@ -99,7 +107,6 @@ export const login = async (req, res) => {
     return res.status(500).json({ message: "Internal server error during login." });
   }
 };
-
 
 export const googleLogin = async (req, res) => {
   try {
@@ -118,9 +125,9 @@ export const googleLogin = async (req, res) => {
 
     res.cookie('token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', 
-      sameSite: 'strict',
-      maxAge: 24 * 60 * 60 * 1000, 
+      secure: true,
+      sameSite: 'None',
+      maxAge: 24 * 60 * 60 * 1000
     });
 
     return res.status(200).json({ message: "Google login successful" });
@@ -130,14 +137,11 @@ export const googleLogin = async (req, res) => {
   }
 };
 
-
-
-
 export const logout = (req, res) => {
   res.clearCookie('token', {
     httpOnly: true,
-    sameSite: 'strict',
-    secure: process.env.NODE_ENV === 'production'
+    secure: true,
+    sameSite: 'None'
   });
   res.status(200).json({ message: "Logged out successfully" });
 };
