@@ -116,14 +116,16 @@ export const addReplyToDoubt = async (req, res) => {
     const doubt = await Doubt.findById(id);
     if (!doubt) return res.status(404).json({ message: "Doubt not found" });
 
-    
-    console.log(`Reply to ${id}: ${text}`);
-    res.status(200).json({ message: "Reply added" });
+    doubt.replies.push(text);
+    await doubt.save();
+
+    res.status(200).json({ message: "Reply added successfully" });
   } catch (err) {
-    console.error(err);
+    console.error("Error adding reply:", err);
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 export const getDrafts = async (req, res) => {
   try {

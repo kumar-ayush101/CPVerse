@@ -1,56 +1,112 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { motion } from "framer-motion"; 
 import Navbar from "./Navbar.jsx";
 import ParticlesBg from "./HomePage/ParticlesBg";
 
-const Drafts = () => {
-  const [drafts, setDrafts] = useState([]);
+const Doubts = () => {
+  const [doubts, setDoubts] = useState([]);
+  const [replyInputs, setReplyInputs] = useState({});
+  const [expandedReplies, setExpandedReplies] = useState({});
 
   useEffect(() => {
-    const fetchDrafts = async () => {
+    const fetchDoubts = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/drafts`, {
-            withCredentials: true,  
-       });
-        
-        setDrafts(response.data);
-      } catch (err) {
-        console.error("Failed to fetch drafts:", err);
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/doubts`, {
+          withCredentials: true
+        });
+        setDoubts(response.data);
+      } catch (error) {
+        console.error("Failed to fetch doubts:", error);
       }
     };
 
-    fetchDrafts();
+    fetchDoubts();
   }, []);
 
-  return (
-    <div className="min-h-screen p-6  text-white">
-      <Navbar/>
-      <ParticlesBg />
-      <h1 className="text-5xl font-bold text-blue-400 mb-12 mt-12 text-center">Saved Drafts</h1>
+  const handleReplyChange = (id, value) => {
+    setReplyInputs((prev) => ({ ...prev, [id]: value }));
+  };
 
-      <div className="max-w-4xl mx-auto grid gap-6">
-        {drafts.length === 0 ? (
-          <p className="text-center text-gray-400">No drafts available.</p>
-        ) : (
-          drafts.map((draft, index) => (
-            <motion.div
-              key={draft._id}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: index * 0.1 }}
-              className="bg-black bg-opacity-60 backdrop-blur-lg p-5 rounded-xl border border-blue-500 shadow-lg"
-            >
-              <p className="text-lg text-gray-200">{draft.text}</p>
-              {/* <p className="text-xs text-gray-500 mt-2 text-right">
-                Draft ID: {draft._id}
-              </p> */}
-            </motion.div>
-          ))
-        )}
+  const handleReplySubmit = async (id) => {
+    const replyText = replyInputs[id];
+    if (!replyText) return;
+
+    try {
+      await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/doubts/${id}/reply`,
+        { text: replyText },
+        { withCredentials: true }
+      );
+
+      // Refresh doubts to get updated replies
+      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/doubts`, {
+        withCredentials: true
+      });
+      setDoubts(res.data);
+      setReplyInputs((prev) => ({ ...prev, [id]: "" }));
+    } catch (err) {
+      console.error("Reply failed:", err);
+    }
+  };
+
+  const toggleReply = (id, idx) => {
+    const key = `${id}_${idx}`;
+    setExpandedReplies((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  };
+
+  return (
+    <div className="min-h-screen text-white p-6">
+      <ParticlesBg />
+      <Navbar />
+      <h2 className="text-5xl font-bold text-blue-400 mt-15 mb-15 ml-150">All Doubts</h2>
+      <div className="flex justify-center">
+        <ul className="space-y-6 max-w-4xl w-full">
+          {doubts.map((doubt) => (
+            <li key={doubt._id} className="bg-black border border-blue-500 rounded-xl p-5 shadow-lg">
+              <p className="text-white text-lg mb-4">{doubt.text}</p>
+
+              {doubt.replies?.length > 0 && (
+                <div className="space-y-2 mb-3">
+                  {doubt.replies.map((reply, idx) => {
+                    const key = `${doubt._id}_${idx}`;
+                    const isExpanded = expandedReplies[key];
+                    return (
+                      <div
+                        key={idx}
+                        onClick={() => toggleReply(doubt._id, idx)}
+                        className="cursor-pointer text-sm bg-blue-800 bg-opacity-30 border border-blue-400 p-2 rounded hover:bg-opacity-50 transition duration-200"
+                      >
+                        {isExpanded ? reply : `${reply.slice(0, 30)}...`}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              <div className="mt-4">
+                <textarea
+                  className="w-full p-2 rounded bg-gray-800 text-white border border-blue-500 mb-2"
+                  rows="2"
+                  placeholder="Write your reply..."
+                  value={replyInputs[doubt._id] || ""}
+                  onChange={(e) => handleReplyChange(doubt._id, e.target.value)}
+                />
+                <button
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white"
+                  onClick={() => handleReplySubmit(doubt._id)}
+                >
+                  Submit Reply
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );
 };
 
-export default Drafts;
+export default Doubts;
