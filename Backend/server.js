@@ -11,7 +11,7 @@ import contentRoutes from './routes/contentRoutes.js';
 dotenv.config();
 const app = express();
 app.use(cors({
-  origin: 'https://cpverse.netlify.app/',
+  origin: 'https://cpverse.netlify.app',
   credentials: true
 }));
 
