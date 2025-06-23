@@ -17,7 +17,7 @@ const CreateContent = () => {
     }
 
     try {
-      const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/${type}`, { text: content },
+      const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/${type}`, { text: content },
       { withCredentials: true }
     );
 
