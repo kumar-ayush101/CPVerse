@@ -42,6 +42,7 @@ const Signup = ({ toggleForm }) => {
    const handleGoogleSuccess = async (credentialResponse) => {
   try {
     const decoded = jwtDecode(credentialResponse.credential);
+    const navigate = useNavigate();
     await axios.post(`${import.meta.env.VITE_API_BASE_URL}/auth/google-login`, {
       email: decoded.email,
       name: decoded.name,
