@@ -16,7 +16,7 @@ const Signup = ({ toggleForm }) => {
       alert(res.data.message); 
       if (res.data.message.includes("OTP")) setOtpSent(true);
     } catch (err) {
-      alert(err.response?.data?.message || "Signup failed ❌");
+      alert(err.response?.data?.message || " Please provide valid email for OTP verification");
     }
   };
 
