@@ -8,6 +8,7 @@ import ParticlesBg from "./HomePage/ParticlesBg";
 const Signup = ({ toggleForm }) => {
   const [form, setForm] = useState({ name: "", email: "", password: "", confirm: "", otp: "" });
   const [otpSent, setOtpSent] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
@@ -42,7 +43,6 @@ const Signup = ({ toggleForm }) => {
    const handleGoogleSuccess = async (credentialResponse) => {
   try {
     const decoded = jwtDecode(credentialResponse.credential);
-    const navigate = useNavigate();
     await axios.post(`${import.meta.env.VITE_API_BASE_URL}/auth/google-login`, {
       email: decoded.email,
       name: decoded.name,
