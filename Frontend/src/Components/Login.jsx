@@ -30,7 +30,6 @@ const Login = ({ toggleForm }) => {
   const handleGoogleSuccess = async (credentialResponse) => {
     try {
       const decoded = jwtDecode(credentialResponse.credential);
-      console.log("decoded :", decoded);
 
       await axios.post(
         `${import.meta.env.VITE_API_BASE_URL}/auth/google-login`,
@@ -44,6 +43,7 @@ const Login = ({ toggleForm }) => {
 
       alert("Google Login successful");
       navigate("/home");
+      console.log("decoded :", decoded);
     } catch (err) {
       console.error("Google login failed", err);
       alert(err.response?.data?.message || "Google Login failed");
