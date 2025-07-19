@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -16,8 +21,12 @@ const ProtectedRoute = ({ element }) => {
 
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_API_BASE_URL}/auth/me`, { withCredentials: true })
-      .then(() => {
+      .get(`${import.meta.env.VITE_API_BASE_URL}/auth/me`, {
+        withCredentials: true,
+      })
+      .then((result) => {
+        console.log("authenticated User : ", result.data);
+        
         setIsAuthenticated(true);
         setLoading(false);
       })
@@ -28,8 +37,9 @@ const ProtectedRoute = ({ element }) => {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>; 
+    return <div>Loading...</div>;
   }
+  console.log("isAuthenticated : ", isAuthenticated);
 
   return isAuthenticated ? element : <Navigate to="/" />;
 };
@@ -39,15 +49,25 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/home" element={<Home />} /> 
-        
-        
-        <Route path="/create-content" element={<ProtectedRoute element={<CreateContent />} />} />
-        <Route path="/posts" element={<ProtectedRoute element={<Post />} />} />
-        <Route path="/doubts" element={<ProtectedRoute element={<Doubts />} />} />
-        <Route path="/drafts" element={<ProtectedRoute element={<Drafts />} />} />
-        <Route path="/trackProgress" element={<ProtectedRoute element={<TrackProgress />} />} />
+        <Route path="/home" element={<Home />} />
 
+        <Route
+          path="/create-content"
+          element={<ProtectedRoute element={<CreateContent />} />}
+        />
+        <Route path="/posts" element={<ProtectedRoute element={<Post />} />} />
+        <Route
+          path="/doubts"
+          element={<ProtectedRoute element={<Doubts />} />}
+        />
+        <Route
+          path="/drafts"
+          element={<ProtectedRoute element={<Drafts />} />}
+        />
+        <Route
+          path="/trackProgress"
+          element={<ProtectedRoute element={<TrackProgress />} />}
+        />
       </Routes>
     </Router>
   );

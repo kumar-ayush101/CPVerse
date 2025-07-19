@@ -11,7 +11,12 @@ const auth = async (req, res, next) => {
      console.log("Cookies received:", req.cookies);
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log("decoded :", decoded );
+
     const user = await User.findById(decoded.id);
+
+    console.log(user);
+    
     if (!user) {
       return res.status(401).json({ message: 'User not found.' });
     }

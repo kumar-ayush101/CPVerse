@@ -117,15 +117,27 @@ export const googleLogin = async (req, res) => {
     }
 
     let user = await User.findOne({ email });
+
     if (!user) {
       user = await User.create({ email, name, isVerified: true, googleId });
     }
+    if(!user.isVerified) {
+      user = await User.findOneAndUpdate({
+        email 
+      },{
+        isVerified : true
+      },{
+        new : true
+      });
 
+    }
+    console.log("updated User :", user);
+    
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1d" });
 
     res.cookie('token', token, {
       httpOnly: true,
-      secure: true,
+      secure: true, 
       sameSite: 'None',
       maxAge: 24 * 60 * 60 * 1000
     });

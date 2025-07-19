@@ -8,6 +8,7 @@ import {
 
 const router = express.Router();
 router.get("/me", auth, (req, res) => {
+  
   res.json({ user: req.user }); 
 });
 
